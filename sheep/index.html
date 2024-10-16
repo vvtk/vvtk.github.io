@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        user-select: none;
+    }
+
+    .box {
+        width: 300px;
+        height: 300px;
+        /* background-color: #ddd; */
+        border-radius: 4px;
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+    }
+
+    section {
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    section>div {
+        width: 76px;
+        height: 76px;
+        border: 2px solid #000;
+        border-radius: 10px;
+        float: left;
+        background-color: pink;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+        cursor: pointer;
+        overflow: hidden;
+        /* color: #000000b3; */
+    }
+
+    .bg {
+        filter: brightness(0.7);
+    }
+
+    footer {
+        height: 120px;
+        width: 650px;
+        overflow: hidden;
+        border-radius: 10px;
+        background-color: #ddd;
+        margin: 0 auto;
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        padding: 30px;
+        transform: translateX(-50%);
+        background-image: url(./img/2.png);
+        background-size: 100% 100%;
+        display: flex;
+        align-items: center;
+        z-index: -1;
+    }
+
+    body {
+        background: url(./img/1.png);
+        background-size: 500px;
+    }
+
+    footer>div {
+        width: 76px;
+        height: 76px;
+        border: 2px solid rgb(117, 117, 117);
+        border-radius: 10px;
+        float: left;
+        background-color: rgb(235, 255, 192);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+        cursor: pointer;
+        overflow: hidden;
+        /* color: #000000b3; */
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+    button{
+        position: absolute;
+        bottom: 20%;
+        left: 20%;
+        width: 80px;
+        height: 40px;
+        border-radius: 5px;
+        background-color: rgba(97, 231, 255, 0.853);
+        border: 2px solid rgb(194, 255, 235);
+    }
+</style>
+
+<body>
+    <ul class="box">
+    </ul>
+    <footer>
+    </footer>
+    <button onclick="dal()">刷新</button>
+    <audio loop="loop" preload="auto" src="./img/微风声_爱给网_aigei_com.mp3">你的浏览器版本太低，不支持audio标签</audio>
+    <audio  src="./img/单击气泡(clickBubble)_爱给网_aigei_com.mp3">你的浏览器版本太低，不支持audio标签</audio>
+    <audio  src="./img/单击按钮(ButtonClick)_爱给网_aigei_com.mp3">你的浏览器版本太低，不支持audio标签</audio>
+    <audio  src="./img/PkmRS 角胜利(PkmRS_CornerVictory)_爱给网_aigei_com.mp3">你的浏览器版本太低，不支持audio标签</audio>
+</body>
+<script src="./jquery-3.6.0.js"></script>
+<script>
+    const block = 80;//块的高和宽
+    var block_tier = 4;//层数
+    var block_tier_one = 2;//第一层数,块的高和宽
+    // const zuo_arr = ['😂', '😘', '❤️', '🤣', '👍', '😍', '🥺', '😕', '🐏'，'😎'，'😊'，'🤡'];
+    const zuo_arr=[
+        '<img src="./img/3 (1).jpg"></img>',
+        '<img src="./img/3 (3).jpg"></img>',
+        '<img src="./img/3 (2).jpg"></img>',
+        '<img src="./img/3 (4).jpg"></img>',
+        '<img src="./img/3 (5).jpg"></img>',
+        '<img src="./img/3 (6).jpg"></img>',
+        '<img src="./img/3 (7).jpg"></img>',
+        ];
+    //计算centen
+    $(".box").css("width", (block_tier + block_tier_one - 1) * block + "px");
+    $(".box").css("height", (block_tier + block_tier_one - 1) * block + "px");
+    //生成层数和方块
+    for (let i = 0; i < block_tier; i++) {
+        let section_div = ''
+        let section = document.createElement('section');
+        $('.box').append(section)
+        for (let j = 0; j < (block_tier_one + block_tier - i - 1) ** 2; j++) { section_div += '<div></div>' }
+        $(section).append(section_div)
+    }
+    //赋值初数据
+    for (let T = 0; T < block_tier; T++) {//赋值初数据
+        $('section').eq(T).css({ top: `${T * block / 2}px`, left: `${T * block / 2}px` })//位置差
+        $(`section:eq(${T})>div`).css(T % 2 ? { 'background-color': 'skyblue' } : { 'background-color': 'pink' })//层数颜色
+        $(`section:eq(${T})>div`).each(function () {//div赋值初数据
+            $(this).attr("x", $(this).index() % (block_tier_one + block_tier - T - 1));
+            $(this).attr("y", Math.floor($(this).index() / (block_tier_one + block_tier - T - 1)));
+            $(this).attr("z", T);
+            $(this).attr("ena", T != block_tier - 1 ? 0 : 1);
+            T != block_tier - 1 ? $(this).addClass('bg') : ''
+            $(this).css("left", parseInt($(this).attr("x")) * block);
+            $(this).css("top", parseInt($(this).attr("y")) * block);
+        });
+    }
+
+    function block_arr() {//生成arr和打乱
+        let arr = [];
+        for (let i = 0; i < $('section>div').length / 3; i++) {
+            const ram = Math.floor(Math.random() * zuo_arr.length)
+            arr.push({ arr: zuo_arr[ram], index: ram }, { arr: zuo_arr[ram], index: ram }, { arr: zuo_arr[ram], index: ram });
+        }
+        arr.sort(() => Math.random() - 0.5);
+        $('section>div').each(function (x) {
+            $(this).attr('arr', arr[x].index)//放个识别物
+            $(this).html(arr[x].arr);
+        })
+    }
+    block_arr();
+
+    //点击事件------------------------------------------------------------
+    $("section>div").click(function () {
+        $('audio')[0].play();//开启音频
+        if ($(this).attr("ena") == 1) {
+            const x = parseInt($(this).attr("x"));
+            const y = parseInt($(this).attr("y"));
+            const z = parseInt($(this).attr("z"));
+            $('audio')[2].currentTime=0//音频重置
+            $('audio')[2].play();//开启音频
+            $(this).animate({
+                top: $('footer>div').length == 0 ? ($('footer').offset().top + 30 - $(this).parent().offset().top) : $('footer>div:last-child').offset().top - $(this).parent().offset().top,
+                left: $('footer>div').length == 0 ? ($('footer').offset().left + 30 - $(this).parent().offset().left) : ($('footer>div:last-child').offset().left + $('footer>div:last-child').width() - $(this).parent().offset().left)
+            }, function () {
+                $('footer').append(this);//移动
+                delete_arr()
+                //显现
+                xianshi(x, y, z);
+                xianshi(x + 1, y, z);
+                xianshi(x, y + 1, z);
+                xianshi(x + 1, y + 1, z);
+            });
+            // --------
+        }
+    });
+    function xianshi(x, y, z) {//显现
+        if (
+            ($(`section>div[z=${z}][x=${x}][y=${y}]`).length) ||
+            ($(`section>div[z=${z}][x=${x - 1}][y=${y}]`).length) ||
+            ($(`section>div[z=${z}][x=${x}][y=${y - 1}]`).length) ||
+            ($(`section>div[z=${z}][x=${x - 1}][y=${y - 1}]`).length)
+        ) { } else {
+            $(`section>div[z=${z - 1}][x=${x}][y=${y}]`).attr("ena", 1);
+            $(`section>div[z=${z - 1}][x=${x}][y=${y}]`).removeClass('bg')
+        }
+    }
+    //消除
+    function delete_arr() {
+        for (let i = 0; i < zuo_arr.length; i++) {
+            if ($(`footer>div[arr=${i}]`).length == 3) {
+                $(`footer>div[arr=${i}]`).remove()
+                $('audio')[1].currentTime=0//音频重置
+                $('audio')[1].play();//开启音频
+            }
+        }
+
+        if ($(`footer>div`).length == 8) {
+            alert('游戏结束了!!');
+            location.reload();
+        }
+        if ($(`div`).length == 0) {
+           $('audio')[3].play();//开启音频
+           $('audio')[0].pause();//关闭音频
+           setTimeout(() => {
+            alert('闯关成功了!!')
+           }, 100);
+        }
+    }
+
+    function dal() {//打乱
+        $('section>div').each(function () {
+            const rand = Math.floor(Math.random() * $('section>div').length);
+            [this.innerHTML, $('section>div')[rand].innerHTML] = [$('section>div')[rand].innerHTML, this.innerHTML]
+            let dal_a = $(this).attr('arr');
+            $(this).attr('arr', $('section>div').eq(rand).attr('arr'));
+            $('section>div').eq(rand).attr('arr', dal_a);
+        })
+
+    }
+          
+</script>
+
+</html>
